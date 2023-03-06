@@ -1,13 +1,13 @@
 #lang racket
 
-(define tablero '((1 1 2 0 0 2 1 0)
-                  (0 2 0 0 0 0 2 0)
-                  (0 1 0 0 0 0 0 0)
-                  (0 2 0 0 0 0 0 0)
-                  (0 1 0 0 0 0 0 0)
-                  (0 2 0 0 0 0 0 0)
-                  (0 1 0 0 0 0 0 0)
-                  (0 1 0 0 0 0 0 0)))
+(define tablero '((0 0 0 0 0 0 0 0)
+                  (0 0 0 0 0 0 0 0)
+                  (0 0 0 0 0 0 0 0)
+                  (0 0 0 0 0 0 0 0)
+                  (0 0 0 0 0 0 0 0)
+                  (0 0 0 0 0 0 0 0)
+                  (0 0 0 0 0 0 0 0)
+                  (0 0 0 0 0 0 0 0)))
 
 (define (indice lista fila columna)
   (cond ((or (null? lista) (< fila 1) (< columna 1) (> fila (len lista)) (> columna (len (car lista))))
@@ -60,6 +60,31 @@
          (candidatos_aux matriz candidatos (+ fila 1) columna))
         )
   )
-  
-  
-  
+
+(define (agregar lista num fila columna)
+   (cond ((or (null? lista) (< fila 1) (< columna 1) (> fila (len lista)) (> columna (len (car lista))))
+               '(999))
+              (else
+               (agregar_aux lista num fila columna '() 1))
+              )
+        )
+
+(define (agregar_aux lista num fila columna new_lista fila_cont)
+  (cond ((null? lista)
+         new_lista)
+        ((equal? fila fila_cont)
+         (agregar_aux (cdr lista) num fila columna (append new_lista (list (agregar_exacto (car lista) num columna '() 1))) (+ fila_cont 1)))
+        (else
+         (agregar_aux (cdr lista) num fila columna (append new_lista (list (car lista))) (+ fila_cont 1)))
+        )
+  )
+
+(define (agregar_exacto lista num columna new_lista columna_cont)
+  (cond ((null? lista)
+         new_lista)
+        ((equal? columna columna_cont)
+         (agregar_exacto (cdr lista) num columna (append new_lista (list num)) (+ columna_cont 1)))
+        (else
+         (agregar_exacto (cdr lista) num columna (append new_lista (list (car lista))) (+ columna_cont 1)))
+        )
+  )
