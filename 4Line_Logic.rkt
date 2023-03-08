@@ -1,13 +1,15 @@
+
 #lang racket
 ;;Columnas   1 2 3 4 5 6 7 8 9 
-(define tablero '(( 0 0 0 0 0 0 0 0);;1
-                 (0 0 0 0 0 0 0 0 0);;2
-                 (0 0 0 0 0 0 0 0 0);;3
-                 (0 0 0 0 1 0 0 0 0);;4
-                 (0 0 1 0 2 1 8 0 0);;5
-                 (0 0 2 2 2 1 0 0 0);;6
-                 (0 0 1 2 1 1 0 0 0);;7
-                 (0 1 2 1 1 1 2 0 0)));;8
+(define tablero '((1 0 0 0 0 0 0 0 1);;1
+                  (0 1 0 0 0 0 0 1 0);;2
+                  (0 0 1 0 0 0 1 0 0);;3
+                  (0 0 0 0 0 0 0 0 0);;4
+                  (0 0 0 0 0 0 0 0 0);;5
+                  (0 0 0 0 0 0 0 0 0);;6
+                  (0 0 0 0 0 0 0 0 0);;7
+                  (0 0 0 0 0 0 0 0 0)));;8
+                 ;; (0 0 0 0 0 0 0 0 0)));;9
 
 
 ;;Función Solución
@@ -54,10 +56,10 @@
         (else #f)))
                      
 (define (sol_diagonal_RL lista contador player indice_fila indice_columna alto ancho reset_fila reset_columna) ;;Alto= cantidad de filas/ Ancho= cantidad de columnas
-  ;;(display "reset_fila: ")(display reset_fila)(display " reset_columna ") (display reset_columna) (display "\n")
-  ;;(display "NUM: ") (display (indice lista indice_fila indice_columna)) (display "\n")
-  ;;(display " indices: ") (display indice_fila) (display " ")(display indice_columna) (display "\n") 
   (cond ((= contador 4)#t)
+
+        ((and(= indice_fila 1) (= indice_columna 1))#f);;No hay ganador
+         
         ((and (> indice_fila alto)(< 1 reset_fila));;mitad inferior de la matriz
          (sol_diagonal_RL lista contador player (- reset_fila 1) reset_columna alto ancho (- reset_fila 1) reset_columna))
         
@@ -67,13 +69,16 @@
         ((= player (indice lista indice_fila indice_columna))
          (sol_diagonal_RL lista (+ 1 contador) player (+ indice_fila 1) (- indice_columna 1) alto ancho reset_fila reset_columna))
 
-        ((and(= indice_fila 1) (= indice_columna 1))#f);;No hay ganador
+       
         
         (else (sol_diagonal_RL lista 0 player (+ indice_fila 1) (- indice_columna 1) alto ancho reset_fila reset_columna))))
 
 
 (define (sol_diagonal_LR lista contador player indice_fila indice_columna alto ancho reset_fila reset_columna) ;;Alto= cantidad de filas/ Ancho= cantidad de columnas
   (cond ((= contador 4)#t)
+        
+        ((and(= indice_fila 1) (= indice_columna ancho))#f);;No hay ganador
+        
         ((and (> indice_fila alto)(> reset_fila 1));;mitad inferior de la matriz
          (sol_diagonal_LR lista contador player (- reset_fila 1) reset_columna alto ancho (- reset_fila 1) reset_columna))
         
@@ -83,7 +88,7 @@
         ((= player (indice lista indice_fila indice_columna))
          (sol_diagonal_LR lista (+ 1 contador) player (+ 1 indice_fila) (+ 1 indice_columna) alto ancho reset_fila reset_columna))
 
-        ((and(= indice_fila 1) (= indice_columna ancho))#f);;No hay ganador
+       
         
         (else (sol_diagonal_LR lista 0 player (+ 1 indice_fila) (+ 1 indice_columna) alto ancho reset_fila reset_columna))))
 
