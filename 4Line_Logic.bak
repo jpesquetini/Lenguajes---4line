@@ -1,9 +1,9 @@
-#lang racket
 
+#lang racket
 ;;Columnas   1 2 3 4 5 6 7 8 9 
-(define tablero '((0 0 0 0 0 0 0 0 0);;1
-                  (0 0 0 0 0 0 0 0 0);;2
-                  (0 0 0 0 0 0 0 0 0);;3
+(define tablero '((1 0 0 0 0 0 0 0 1);;1
+                  (0 1 0 0 0 0 0 1 0);;2
+                  (0 0 1 0 0 0 1 0 0);;3
                   (0 0 0 0 0 0 0 0 0);;4
                   (0 0 0 0 0 0 0 0 0);;5
                   (0 0 0 0 0 0 0 0 0);;6
@@ -11,76 +11,6 @@
                   (0 0 0 0 0 0 0 0 0)));;8
                  ;; (0 0 0 0 0 0 0 0 0)));;9
 
-;;Funcion Candidatos
-(define (candidatos lista)
-  (cond ((null? lista)
-         lista)
-        (else
-         (candidatos_aux lista '() 1 1))
-        )
-  )
-
-(define (candidatos_aux matriz candidatos fila columna)
-  (cond ((> columna (len (car matriz)))
-         candidatos)
-        ((> fila (len matriz))
-         (candidatos_aux matriz candidatos 1 (+ columna 1)))
-        ((equal? (indice matriz fila columna) 0)
-         (candidatos_aux matriz (append candidatos (list (list fila columna))) 1 (+ columna 1)))
-        (else
-         (candidatos_aux matriz candidatos (+ fila 1) columna))
-        )
-  )
-
-;;Funcion Seleccion
-(define (seleccion lista)
-  (cond ((null? lista)
-         lista)
-        (else
-         (seleccion_aux lista (cdr (candidatos lista)) '() 0 (caar (candidatos lista)) (cadar (candidatos lista))))
-        )
-  )
-
-(define (seleccion_aux lista posibles seleccion valor_seleccion fila columna)
-  (cond ((and (null? posibles) (equal? valor_seleccion 1))
-         (indicel (candidatos tablero) (+ 1 (random (len (candidatos tablero))))))
-        ((null? posibles)
-         seleccion)
-        ((> (objetivo (agregar lista 2 fila columna) fila columna) valor_seleccion)
-         (seleccion_aux lista (cdr posibles) (list fila columna) (objetivo (agregar lista 2 fila columna) fila columna) (caar posibles) (cadar posibles)))
-        (else
-         (seleccion_aux lista (cdr posibles) seleccion valor_seleccion (caar posibles) (cadar posibles)))
-        )
-  )
-
-;;Funcion Objetivo
-(define (objetivo lista fila columna)
-  (cond ((equal? (viabilidad lista fila columna) "solucion")
-         6)
-        ((equal? (viabilidad lista fila columna) "bloqueo")
-         5)
-        ((equal? (viabilidad lista fila columna) "vertical")
-         4)
-        ((equal? (viabilidad lista fila columna) "horizontal")
-         3)
-        ((equal? (viabilidad lista fila columna) "diagonal")
-         2)
-        ((equal? (viabilidad lista fila columna) "random")
-         1)
-        )
-  )
-
-;;Funcion Viabilidad
-(define (viabilidad lista fila columna)
-  (cond ((equal? #t (solucion lista 2)) "solucion");Máquina Gana
-        ((equal? #t (solucion (agregar lista 1 fila columna) 1)) "bloqueo");Old Spice
-        ((equal? 2 (indice lista (- fila 1) columna)) "vertical")
-        ((or (equal? 2 (indice lista fila (- columna 1))) (equal? 2 (indice lista fila (+ columna 1)))) "horizontal")
-        ((or (equal? 2 (indice lista (- fila 1) (- columna 1)))
-             (equal? 2 (indice lista (- fila 1) (+ columna 1)))
-             (equal? 2 (indice lista (+ fila 1) (- columna 1)))
-             (equal? 2 (indice lista (+ fila 1) (+ columna 1)))) "diagonal")
-        (else "random")))
 
 ;;Función Solución
 (define (solucion lista player)
@@ -101,6 +31,8 @@
         ((= (car lista) player) (sol_horizontal_aux (cdr lista) (+ 1 contador) player))
         (else(sol_horizontal_aux (cdr lista) 0 player))))
 
+
+
 ;;Solución Vertical
 (define (sol_vertical? lista player)
   (sol_vertical_aux lista 0 player 1 1 (len lista) (len (car lista))))
@@ -112,6 +44,10 @@
         ((= player (indice lista indice_fila indice_columna))
          (sol_vertical_aux lista (+ 1 contador) player (+ 1 indice_fila) indice_columna alto ancho))
         (else (sol_vertical_aux lista contador player (+ 1 indice_fila) indice_columna alto ancho))))
+
+
+
+
 
 ;;Solución Diagonal
 (define (sol_diagonal? lista player)
@@ -157,7 +93,8 @@
         (else (sol_diagonal_LR lista 0 player (+ 1 indice_fila) (+ 1 indice_columna) alto ancho reset_fila reset_columna))))
 
 
-;;Funcion Indices para Matrices
+
+;;extraido del git________________________________________________________________________________________________
 (define (indice lista fila columna)
   (cond ((or (null? lista) (< fila 1) (< columna 1) (> fila (len lista)) (> columna (len (car lista))))
          999)
@@ -182,24 +119,6 @@
         )
   )
 
-;;Funcion Indices para Listas
-(define (indicel lista columna)
-  (cond ((or (null? lista) (< columna 1) (> columna (len lista)))
-         999)
-        (else
-         (indicel_aux lista columna))
-        )
-  )
-
-(define (indicel_aux lista columna)
-  (cond ((equal? columna 1)
-         (car lista))
-        (else
-         (indicel_aux (cdr lista) (- columna 1)))
-        )
-  )
-         
-;;Funcion len
 (define (len lista)
   (cond ((null? lista)
          0)
@@ -208,7 +127,27 @@
         )
   )
 
-;;Funcion Agregar 
+
+(define (candidatos lista)
+  (cond ((null? lista)
+         lista)
+        (else
+         (candidatos_aux lista '() 1 1))
+        )
+  )
+
+(define (candidatos_aux matriz candidatos fila columna)
+  (cond ((> columna (len (car matriz)))
+         candidatos)
+        ((> fila (len matriz))
+         (candidatos_aux matriz candidatos 1 (+ columna 1)))
+        ((equal? (indice matriz fila columna) 0)
+         (candidatos_aux matriz (append candidatos (list (list fila columna))) 1 (+ columna 1)))
+        (else
+         (candidatos_aux matriz candidatos (+ fila 1) columna))
+        )
+  )
+
 (define (agregar lista num fila columna)
    (cond ((or (null? lista) (< fila 1) (< columna 1) (> fila (len lista)) (> columna (len (car lista))))
                '(999))
