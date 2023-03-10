@@ -1,0 +1,438 @@
+#lang racket/gui
+(define pos1 0)
+(define pos2 0)
+(define pos3 0)
+(define pos4 0)
+(define pos5 0)
+(define pos6 0)
+(define pos7 0)
+(define pos8 0)
+(define pos9 0)
+(define pos10 0)
+(define pos11 0)
+(define pos12 0)
+(define pos13 0)
+(define pos14 0)
+(define pos15 0)
+(define pos16 0)
+(define turno 0)
+(define tamañoColumnas 16)
+(define tamañoFilas    8)
+; Se define la ventana de inicio en la cual se escoge el tamaño del tablero para jugar
+(define ventanaInicio
+  (new frame%
+       [label "4in Line"]
+       [width 1720]
+       [height 1720]
+       [stretchable-width #f]	 
+       [stretchable-height #f]
+      )
+  )
+(define mainPane
+  (new horizontal-panel%
+       [parent ventanaInicio]
+       [min-width 210]
+       [min-height 40]
+
+       [stretchable-width #t]	 
+       [stretchable-height #t]
+       ))
+(define optionCanvas
+  (new canvas%
+       [parent mainPane]
+       [paint-callback (lambda (canvas dc)
+                         ;Líneas Horizontales
+                         (send dc set-brush "black" 'solid)
+                         (send dc draw-rectangle 0 0 1123 1104) ;; Se dibuja el campo de juego
+                         (send dc set-text-foreground "green")
+                         (send dc draw-text "Columnas:" 0 10)
+                         (send dc draw-text (~a tamañoColumnas) 170 10)
+                         )]))
+(define columPanel
+  (new horizontal-panel%
+       [parent ventanaInicio]
+       [style '(border)]
+       [alignment '(right center)]
+       [stretchable-height #t]))
+(define mainPane2
+  (new pane%
+       [parent ventanaInicio]
+       [min-width 210]
+       [min-height 40]
+              [stretchable-width #t]	 
+       [stretchable-height #t]
+       ))
+(define optionCanvas2
+  (new canvas%
+       [parent mainPane2]
+       [paint-callback (lambda (canvas dc)
+                         ;Líneas Horizontales
+                         (send dc set-brush "black" 'solid)
+                         (send dc draw-rectangle 0 0 1123 1104) ;; Se dibuja el campo de juego
+                         (send dc set-text-foreground "green")
+                         (send dc draw-text "Filas:" 0 10)
+                         (send dc draw-text (~a tamañoFilas) 170 10)
+                         )]))
+(define rowPanel
+  (new horizontal-panel%
+       [parent ventanaInicio]
+       [style '(border)]
+       [alignment '(right center)]
+       [stretchable-height #t]
+       ))
+(define buttonColumsLess
+  (new button% [parent columPanel]
+       [label "-"]
+       [callback (lambda (button event)
+       (columsLess))]
+       ))
+(define buttonColumsPlus
+  (new button% [parent columPanel]
+       [label "+"]
+       [callback (lambda (button event)
+       (columsPlus))]
+       ))
+
+(define buttonPlay
+  (new button% [parent rowPanel]
+       [label "Jugar"]
+       [callback (lambda (button event)(Play))]
+       ))
+
+(define buttonRowsLess
+  (new button% [parent rowPanel]
+       [label "-"]
+       [callback (lambda (button event)
+       (rowsLess))]
+       ))
+(define buttonRowsPlus
+  (new button% [parent rowPanel]
+       [label "+"]
+       [callback (lambda (button event)
+       (rowsPlus))]
+       ))
+
+
+(define (rowsPlus)
+  (cond ((< tamañoFilas 16)
+  (set! tamañoFilas (+ tamañoFilas 1))
+  (send (send optionCanvas2 get-dc) erase)
+  (send optionCanvas2 on-paint)
+  )
+   ))
+(define (rowsLess)
+  (cond ((> tamañoFilas 8)
+  (set! tamañoFilas (- tamañoFilas 1))
+  (send (send optionCanvas2 get-dc) erase)
+  (send optionCanvas2 on-paint)
+  )
+   ))
+
+(define (columsPlus)
+  (cond ((< tamañoColumnas 16)
+  (set! tamañoColumnas (+ tamañoColumnas 1))
+  (send (send optionCanvas get-dc) erase)
+  (send optionCanvas on-paint)
+  )
+   ))
+(define (columsLess)
+  (cond ((> tamañoColumnas 8)
+  (set! tamañoColumnas (- tamañoColumnas 1))
+  (send (send optionCanvas get-dc) erase)
+  (send optionCanvas on-paint)
+  )
+   ))
+(define ventana 0)
+(define boton1 0)
+(define boton2 0)
+(define boton3 0)
+(define boton4 0)
+(define boton5 0)
+(define boton6 0)
+(define boton7 0)
+(define boton8 0)
+(define boton9 0)
+(define boton10 0)
+(define boton11 0)
+(define boton12 0)
+(define boton13 0)
+(define boton14 0)
+(define boton15 0)
+(define boton16 0)
+(define Gamepane 0)
+(define boardCanvas 0)
+(define buttonPanel 0)
+(define (Play)
+  ;(ventana)
+  ;(display tamañoFilas )
+  ;(display "\n")
+  ;(display tamañoColumnas )
+  (set! ventana (createVentana))
+  (set! Gamepane (createGamepane))
+  (set! buttonPanel  (createButtonPanel))
+  (set! boton1 (createButton1))
+  (set! boton2 (createButton2))
+  (set! boton3 (createButton3))
+  (set! boton4 (createButton4))
+  (set! boton5 (createButton5))
+  (set! boton6 (createButton6))
+  (set! boton7 (createButton7))
+  (set! boton8 (createButton8))
+  (set! boton9 (createButton9))
+  (set! boton10 (createButton10))
+  (set! boton11 (createButton11))
+  (set! boton12 (createButton12))
+  (set! boton13 (createButton13))
+  (set! boton14 (createButton14))
+  (set! boton15 (createButton15))
+  (set! boton16 (createButton16))
+  (set! boardCanvas (createBoardCanvas))
+  
+
+  (send ventanaInicio show #f)
+  ;(send (ventana) show #f)
+  (send ventana show #t)
+  (buildColumns 0 tamañoFilas tamañoColumnas)
+  (buildRows 0 tamañoFilas tamañoColumnas)
+  ;(buildRows 0 tamañoFilas tamañoColumnas)
+  ;(buildColumns 0 tamañoFilas tamañoColumnas)
+  )
+
+
+(send ventanaInicio show #t)
+
+;En las siguientes lineas se construye la ventana para jugar
+
+(define (createVentana)
+  (new frame%
+       [label "4in Line"]
+       [width 1720]
+       [height 1720]
+       [stretchable-width #f]	 
+       [stretchable-height #f]
+      )
+  
+  )
+(define t 50)
+(define (createGamepane)
+  (new pane%
+       [parent ventana]
+       [min-width 110]
+       [min-height (+(* 50 tamañoFilas) 10)]
+       ;[min-height ]
+       [stretchable-width #t]	 
+       [stretchable-height #t]
+       ))
+
+(define (createButtonPanel)
+  (new horizontal-panel%
+       [parent ventana]
+       [style '(border)]
+       [stretchable-height #t]))
+
+(define (createButton1)
+  (new button% [parent buttonPanel]
+       [label "1"]
+       [callback (lambda (button event)
+       (putCoin 0 pos1))]))
+
+(define (createButton2)
+  (new button% [parent buttonPanel]
+       [label "2"]
+       [callback (lambda (button event)
+       (putCoin 1 pos2))]
+                ))
+(define (createButton3)
+  (new button% [parent buttonPanel]
+       [label "3"]
+       [callback (lambda (button event)
+       (putCoin 2 pos3))]
+       ))
+(define (createButton4)
+  (new button% [parent buttonPanel]
+       [label "4"]              
+       [callback (lambda (button event)
+       (putCoin 3 pos4))]
+       ))
+(define (createButton5)
+  (new button% [parent buttonPanel]
+       [label "5"]
+       [callback (lambda (button event)
+       (putCoin 4 pos5))]
+       ))
+(define (createButton6)
+  (new button% [parent buttonPanel]
+       [label "6"]              
+       [callback (lambda (button event)
+       (putCoin 5 pos6))]
+       ))
+(define (createButton7)
+  (new button% [parent buttonPanel]
+       [label "7"]
+       [callback (lambda (button event)
+       (putCoin 6 pos7))]
+       ))
+(define (createButton8)
+  (new button% [parent buttonPanel]
+       [label "8"]              
+       [callback (lambda (button event)
+       (putCoin 7 pos8))]
+       ))
+
+(define (createButton9)
+  (cond ((<= 9 tamañoColumnas)
+    (new button% [parent buttonPanel]
+       [label "9"]
+       [callback (lambda (button event)
+       (putCoin 8 pos9))]
+       ))
+  ))
+
+(define (createButton10)
+  (cond ((<= 10 tamañoColumnas)
+  (new button% [parent buttonPanel]
+       [label "10"]              
+       [callback (lambda (button event)
+       (putCoin 9 pos10))]
+       ))
+   ))
+(define (createButton11)
+(cond ((<= 11 tamañoColumnas)
+(new button% [parent buttonPanel]
+       [label "11"]
+       [callback (lambda (button event)
+       (putCoin 10 pos11))]
+       ))
+ ))
+(define (createButton12)
+(cond ((<= 12 tamañoColumnas)
+  (new button% [parent buttonPanel]
+       [label "12"]              
+       [callback (lambda (button event)
+       (putCoin 11 pos12))]
+       ))
+))
+(define (createButton13)
+ (cond ((<= 13 tamañoColumnas)
+  (new button% [parent buttonPanel]
+       [label "13"]
+       [callback (lambda (button event)
+       (putCoin 12 pos13))]
+       ))
+      ))
+(define (createButton14)
+  (cond ((<= 14 tamañoColumnas)
+  (new button% [parent buttonPanel]
+       [label "14"]              
+       [callback (lambda (button event)
+       (putCoin 13 pos14))]
+       ))))
+(define (createButton15)
+  (cond ((<= 15 tamañoColumnas)
+  (new button% [parent buttonPanel]
+       [label "15"]
+       [callback (lambda (button event)
+       (putCoin 14 pos15))]
+       ))))
+
+(define (createButton16)
+  (cond ((<= 16 tamañoColumnas)
+  (new button% [parent buttonPanel]
+       [label "16"]              
+       [callback (lambda (button event)
+       (putCoin 15 pos16))]
+       ))))
+
+(define (putCoin n pos)
+  (cond ((equal? turno 0)
+  (send (send boardCanvas get-dc) set-pen "blue" 10 'solid)
+  (send (send boardCanvas get-dc) set-brush "blue" 'solid)
+  (set! turno 1)
+  )(else 
+         (send (send boardCanvas get-dc) set-pen "red" 10 'solid)
+         (send (send boardCanvas get-dc) set-brush "red" 'solid)
+         (set! turno 0)
+         )
+   )
+  (send (send boardCanvas get-dc) draw-ellipse (+ 17 (* n 69)) (- (-(* 50 tamañoFilas)41) pos) 35 35) ;; Se dibuja el círculo en el centro del campo.
+
+  (cond ((equal? n 0)
+  (set! pos1 (+ pos1 50))))
+
+  (cond ((equal? n 1)
+  (set! pos2 (+ pos2 50))))
+
+  (cond ((equal? n 2)
+  (set! pos3 (+ pos3 50))))
+
+    (cond ((equal? n 3)
+  (set! pos4 (+ pos4 50))))
+
+    (cond ((equal? n 4)
+  (set! pos5 (+ pos5 50))))
+
+    (cond ((equal? n 5)
+  (set! pos6 (+ pos6 50))))
+
+    (cond ((equal? n 6)
+  (set! pos7 (+ pos7 50))))
+
+    (cond ((equal? n 7)
+  (set! pos8 (+ pos8 50))))
+
+    (cond ((equal? n 8)
+  (set! pos9 (+ pos9 50))))
+
+    (cond ((equal? n 9)
+  (set! pos10 (+ pos10 50))))
+
+  (cond ((equal? n 10)
+  (set! pos11 (+ pos11 50))))
+
+  (cond ((equal? n 11)
+  (set! pos12 (+ pos12 50))))
+
+  (cond ((equal? n 12)
+  (set! pos13 (+ pos13 50))))
+
+  (cond ((equal? n 13)
+  (set! pos14 (+ pos14 50))))
+
+  (cond ((equal? n 14)
+  (set! pos15 (+ pos15 50))))
+
+  (cond ((equal? n 15)
+  (set! pos16 (+ pos16 50))))
+  
+  )
+(define (createBoardCanvas)
+  (new canvas%
+       [parent Gamepane]
+       [paint-callback (lambda (canvas dc)
+     
+                         (send dc set-brush "black" 'solid)
+                         (send dc draw-rectangle 0 0 1123 1104)
+                         (send dc set-pen "green" 1 'solid)
+                         )]))
+;; Tablero
+(define (buildColumns cont n m)
+  (cond((equal? cont m)
+      (display "Columna \n")(send (send boardCanvas get-dc) draw-line (* cont 69) 0 (* cont 69) (* n 50) )
+      
+      )
+  (else
+   (display "Columna \n") (send (send boardCanvas get-dc) draw-line (* cont 69) 0 (* cont 69) (* n 50) )
+   (buildColumns(+ cont 1) n m))))
+
+
+(define (buildRows cont n m)
+  (cond((equal? cont n)
+      (send (send boardCanvas get-dc)  draw-line 0 (* cont 50) (* m 69) (* cont 50) )
+      )
+  (else
+   (send (send boardCanvas get-dc)  draw-line 0 (* cont 50) (* m 69) (* cont 50) )
+   (buildRows(+ cont 1) n m))))
+
+
+;(send (send boardCanvas get-dc) set-pen "green" 1 'solid)
+;(buildColumns 0 8 9)

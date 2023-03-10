@@ -1,16 +1,3 @@
-#lang racket
-
-;;Columnas   1 2 3 4 5 6 7 8 9 
-(define tablero '((0 0 0 0 0 0 0 0 0);;1
-                  (0 0 0 0 0 0 0 0 0);;2
-                  (0 0 0 0 0 0 0 0 0);;3
-                  (0 0 0 0 0 0 0 0 0);;4
-                  (0 0 0 0 0 0 0 0 0);;5
-                  (0 0 0 0 0 0 0 0 0);;6
-                  (0 0 0 0 0 0 0 0 0);;7
-                  (0 0 0 0 0 0 0 0 0)));;8
-                 ;; (0 0 0 0 0 0 0 0 0)));;9
-
 ;;Funcion Candidatos
 (define (candidatos lista)
   (cond ((null? lista)
@@ -43,7 +30,7 @@
 
 (define (seleccion_aux lista posibles seleccion valor_seleccion fila columna)
   (cond ((and (null? posibles) (equal? valor_seleccion 1))
-         (indicel (candidatos tablero) (+ 1 (random (len (candidatos tablero))))))
+         (indicel (candidatos lista) (+ 1 (random (len (candidatos lista))))))
         ((null? posibles)
          seleccion)
         ((> (objetivo (agregar lista 2 fila columna) fila columna) valor_seleccion)
